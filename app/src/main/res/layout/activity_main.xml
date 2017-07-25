@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.example.administrator.mrmanager.MainActivity">
+
+
+    <LinearLayout
+        android:id="@+id/dynamicContent"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="#ffffff"
+        android:orientation="vertical"></LinearLayout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/bottonNavBar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#ffffff"
+        android:elevation="10dp"
+        android:orientation="horizontal"
+        android:paddingTop="5dp">
+
+
+        <RadioGroup
+            android:id="@+id/radioGroup1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:baselineAligned="false"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/uploadnotes"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#e97979"
+                android:button="@null"
+                android:checked="false"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="Upload"
+                android:textSize="12sp" />
+            <!--android:drawableTop="@drawable/selector_matching"
+            android:textColor="@drawable/selector_nav_text"-->
+
+
+
+            <RadioButton
+                android:id="@+id/dashboard"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#79b8e9"
+                android:button="@null"
+                android:checked="false"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="Dashboard"
+                android:textSize="12sp" />
+            <!--android:drawableTop="@drawable/selector_deals"
+            android:textColor="@drawable/selector_nav_text"-->
+
+
+            <RadioButton
+                android:id="@+id/Attendance"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="#e3e979"
+                android:button="@null"
+                android:checked="false"
+                android:gravity="center"
+                android:padding="2dp"
+                android:text="Attendance"
+                android:textSize="12sp" />
+            <!--android:drawableTop="@drawable/selector_listing"
+            android:textColor="@drawable/selector_nav_text"-->
+
+
+        </RadioGroup>
+    </LinearLayout>
+
+
+</LinearLayout>
