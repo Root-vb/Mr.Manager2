@@ -95,5 +95,12 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
             intent.setType("file/*");
             //startActivityForResult(intent,);
         }
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }
