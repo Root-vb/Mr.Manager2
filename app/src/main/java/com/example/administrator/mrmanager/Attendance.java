@@ -11,16 +11,16 @@ public class Attendance extends MainActivity{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_attendence);
+        //setContentView(R.layout.activity_attendence);
 
         dynamicContent = (LinearLayout)  findViewById(R.id.dynamicContent);
         bottonNavBar= (LinearLayout) findViewById(R.id.bottonNavBar);
-        View wizard = getLayoutInflater().inflate(R.layout.activity_upload_notes, null);
+        View wizard = getLayoutInflater().inflate(R.layout.activity_attendence, null);
         dynamicContent.addView(wizard);
 
 
         //get the reference of RadioGroup.
-        RadioButton rb=(RadioButton)findViewById(R.id.uploadnotes);
+        RadioButton rb=(RadioButton)findViewById(R.id.Attendance);
 
         // Change the corresponding icon and text color on nav button click.
         rb.setTextColor(Color.parseColor("#3F51B5"));

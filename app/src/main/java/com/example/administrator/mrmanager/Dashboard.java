@@ -12,6 +12,7 @@ public class Dashboard extends MainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_dashboard);
+        //abcd
 
         dynamicContent = (LinearLayout)  findViewById(R.id.dynamicContent);
         bottonNavBar= (LinearLayout) findViewById(R.id.bottonNavBar);
