@@ -23,8 +23,8 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_upload_notes);
-        btn_Select = (Button) findViewById(R.id.Button_Select);
-        btn_Select.setOnClickListener(this);
+
+
 
         dynamicContent = (LinearLayout)  findViewById(R.id.dynamicContent);
         bottonNavBar= (LinearLayout) findViewById(R.id.bottonNavBar);
@@ -36,6 +36,9 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
 
         // Change the corresponding icon and text color on nav button click.
         rb.setTextColor(Color.parseColor("#3F51B5"));
+
+        btn_Select = (Button) findViewById(R.id.Button_Select);
+        btn_Select.setOnClickListener(this);
 
         spinner_class = (Spinner) findViewById(R.id.Spinner_Class);
         spinner_subject = (Spinner) findViewById(R.id.Spinner_Subject);
