@@ -1,5 +1,6 @@
 package com.example.administrator.mrmanager;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -11,7 +12,7 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class UploadNotes extends MainActivity {
+public class UploadNotes extends MainActivity implements View.OnClickListener {
     LinearLayout dynamicContent,bottonNavBar;
     Button btn_Upload,btn_Reset,btn_Select;
     TextView text_fileName;
@@ -22,6 +23,8 @@ public class UploadNotes extends MainActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_upload_notes);
+        btn_Select = (Button) findViewById(R.id.Button_Select);
+        btn_Select.setOnClickListener(this);
 
         dynamicContent = (LinearLayout)  findViewById(R.id.dynamicContent);
         bottonNavBar= (LinearLayout) findViewById(R.id.bottonNavBar);
@@ -59,8 +62,6 @@ public class UploadNotes extends MainActivity {
             }
         });
     }
-
-    /*@Override*/
     public void select() {
             selected_class = ((Spinner) findViewById(R.id.Spinner_Class)).getSelectedItem().toString();
             if(selected_class.equals("11th")||selected_class.equals("12th"))
@@ -82,4 +83,14 @@ public class UploadNotes extends MainActivity {
                 spinner_subject.setAdapter(adapter1);
             }
         }
+
+    @Override
+    public void onClick(View view) {
+        if(view == btn_Select)
+        {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("file/*");
+            //startActivityForResult(intent,);
+        }
+    }
 }
