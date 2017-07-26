@@ -3,6 +3,7 @@ package com.example.administrator.mrmanager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -10,7 +11,7 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-public class UploadNotes extends MainActivity implements View.OnClickListener{
+public class UploadNotes extends MainActivity {
     LinearLayout dynamicContent,bottonNavBar;
     Button btn_Upload,btn_Reset,btn_Select;
     TextView text_fileName;
@@ -46,13 +47,21 @@ public class UploadNotes extends MainActivity implements View.OnClickListener{
         spinner_class.setAdapter(adapter1);
         spinner_subject.setAdapter(adapter2);
 
-        spinner_class.setOnClickListener(this);
+        spinner_class.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+        {
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
+            {
+                select();
+            } // to close the onItemSelected
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+
+            }
+        });
     }
 
-    @Override
-    public void onClick(View view) {
-        if (view == spinner_class)
-        {
+    /*@Override*/
+    public void select() {
             selected_class = ((Spinner) findViewById(R.id.Spinner_Class)).getSelectedItem().toString();
             if(selected_class.equals("11th")||selected_class.equals("12th"))
             {
@@ -73,5 +82,4 @@ public class UploadNotes extends MainActivity implements View.OnClickListener{
                 spinner_subject.setAdapter(adapter1);
             }
         }
-    }
 }
