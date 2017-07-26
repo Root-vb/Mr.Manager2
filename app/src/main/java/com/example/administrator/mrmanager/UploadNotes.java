@@ -39,13 +39,13 @@ public class UploadNotes extends MainActivity {
 
 
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.Class_string, android.R.layout.simple_spinner_item);
-        ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.Error_Subject_string, android.R.layout.simple_spinner_item);
+        //ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.Error_Subject_string, android.R.layout.simple_spinner_item);
 
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinner_class.setAdapter(adapter1);
-        spinner_subject.setAdapter(adapter2);
+        //spinner_subject.setAdapter(adapter2);
 
         spinner_class.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
