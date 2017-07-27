@@ -16,7 +16,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".UploadNotes" />
+        <activity android:name=".UploadNotes"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="Upload Notes"
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait">
+            </activity>
         <activity android:name=".Attendance" />
         <activity android:name=".Dashboard"></activity>
     </application>

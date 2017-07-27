@@ -1,6 +1,7 @@
 package com.example.administrator.mrmanager;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,6 +16,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
     Button btn_Upload,btn_Reset,btn_Select;
     TextView text_fileName;
     String selected_class;
+    int FILE_SELECT_CODE=1;
     Spinner spinner_class,spinner_subject;
 
     @Override
@@ -27,6 +29,12 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
 
         btn_Select = (Button) findViewById(R.id.Button_Select);
         btn_Select.setOnClickListener(this);
+        btn_Upload = (Button) findViewById(R.id.Button_Upload);
+        btn_Upload.setOnClickListener(this);
+        btn_Reset = (Button) findViewById(R.id.Button_Reset);
+        btn_Reset.setOnClickListener(this);
+
+        text_fileName = (TextView) findViewById(R.id.Text_FileName);
 
         spinner_class = (Spinner) findViewById(R.id.Spinner_Class);
         spinner_subject = (Spinner) findViewById(R.id.Spinner_Subject);
@@ -81,9 +89,27 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("file/*");
-            //startActivityForResult(intent,);
+            startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"),FILE_SELECT_CODE);
         }
+        else if(view == btn_Upload)
+        {
 
+        }
+        else if(view == btn_Reset)
+        {
+
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==FILE_SELECT_CODE)
+        {
+            Uri selectedFileUri=data.getData();
+            text_fileName.setText(selectedFileUri.toString().trim());
+
+        }
     }
 
     @Override
