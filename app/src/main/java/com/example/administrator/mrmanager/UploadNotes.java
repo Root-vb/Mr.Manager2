@@ -1,14 +1,12 @@
 package com.example.administrator.mrmanager;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -22,20 +20,10 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_upload_notes);
+        setContentView(R.layout.activity_upload_notes);
 
-
-
-        dynamicContent = (LinearLayout)  findViewById(R.id.dynamicContent);
-        bottonNavBar= (LinearLayout) findViewById(R.id.bottonNavBar);
-        View wizard = getLayoutInflater().inflate(R.layout.activity_upload_notes, null);
-        dynamicContent.addView(wizard);
-
-        //get the reference of RadioGroup.
-        RadioButton rb=(RadioButton)findViewById(R.id.uploadnotes);
 
         // Change the corresponding icon and text color on nav button click.
-        rb.setTextColor(Color.parseColor("#3F51B5"));
 
         btn_Select = (Button) findViewById(R.id.Button_Select);
         btn_Select.setOnClickListener(this);
