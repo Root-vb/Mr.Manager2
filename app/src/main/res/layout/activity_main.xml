@@ -12,6 +12,7 @@
     android:orientation="vertical"
     tools:context="com.example.administrator.mrmanager.MainActivity">
     <ImageView
+        android:layout_marginBottom="50dp"
         android:src="@drawable/banner"
         android:layout_width="match_parent"
         android:layout_height="200dp" />
@@ -62,6 +63,7 @@
             android:layout_margin="5dp"
             card_view:cardCornerRadius="4dp">
             <LinearLayout
+                android:id="@+id/LLattendance"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
@@ -99,6 +101,7 @@
         card_view:cardCornerRadius="4dp">
 
         <LinearLayout
+            android:id="@+id/LLstudent"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
@@ -134,6 +137,7 @@
         android:layout_margin="5dp"
         card_view:cardCornerRadius="4dp">
         <LinearLayout
+            android:id="@+id/LLdashboard"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">

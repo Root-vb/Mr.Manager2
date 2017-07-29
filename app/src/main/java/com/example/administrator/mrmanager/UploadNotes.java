@@ -1,3 +1,4 @@
+
 package com.example.administrator.mrmanager;
 
 import android.content.Intent;
@@ -11,8 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+
 public class UploadNotes extends MainActivity implements View.OnClickListener {
-    LinearLayout dynamicContent,bottonNavBar;
+    LinearLayout LLselect;
     Button btn_Upload,btn_Reset,btn_Select;
     TextView text_fileName;
     String selected_class;
@@ -27,8 +29,8 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
 
         // Change the corresponding icon and text color on nav button click.
 
-        btn_Select = (Button) findViewById(R.id.Button_Select);
-        btn_Select.setOnClickListener(this);
+        LLselect = (LinearLayout) findViewById(R.id.LLselect);
+        LLselect.setOnClickListener(this);
         btn_Upload = (Button) findViewById(R.id.Button_Upload);
         btn_Upload.setOnClickListener(this);
         btn_Reset = (Button) findViewById(R.id.Button_Reset);
