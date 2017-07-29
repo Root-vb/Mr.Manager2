@@ -4,6 +4,7 @@ package com.example.administrator.mrmanager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -14,6 +15,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
 
 public class UploadNotes extends MainActivity implements View.OnClickListener {
     LinearLayout LLselect;
@@ -21,13 +28,17 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
     TextView text_fileName;
     String selected_class;
     int FILE_SELECT_CODE=1;
+    private StorageReference mStorageRef;
     Spinner spinner_class,spinner_subject;
+    Uri selectedFileUri;
+    Uri downloadUrl1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_notes);
 
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
         // Change the corresponding icon and text color on nav button click.
 
@@ -97,7 +108,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         }
         else if(view == btn_Upload)
         {
-
+            Upload(selectedFileUri);
         }
         else if(view == btn_Reset)
         {
@@ -105,6 +116,28 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         }
     }
 
+    private void Upload(Uri SFU)
+    {
+
+        StorageReference pdfRef = mStorageRef.child("images/rivers.jpg");
+
+        pdfRef.putFile(SFU)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // Get a URL to the uploaded content
+                        @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                        downloadUrl1=downloadUrl;
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                        // ...
+                    }
+                });
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -112,7 +145,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         if(requestCode==FILE_SELECT_CODE)
         {
             try {
-                Uri selectedFileUri = data.getData();
+                selectedFileUri = data.getData();
                 text_fileName.setText(selectedFileUri.toString().trim());
             }catch (Exception e){
                 Toast.makeText(getApplicationContext(),"No File Selected",Toast.LENGTH_SHORT);
