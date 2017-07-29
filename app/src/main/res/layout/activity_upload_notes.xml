@@ -29,6 +29,7 @@
             card_view:cardCornerRadius="4dp">
 
             <LinearLayout
+                android:background="@drawable/colored_border"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
@@ -60,6 +61,7 @@
             card_view:cardCornerRadius="4dp">
 
             <LinearLayout
+                android:background="@drawable/colored_border"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
@@ -88,9 +90,11 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_margin="5dp"
+
             card_view:cardCornerRadius="4dp">
 
             <LinearLayout
+                android:background="@drawable/colored_border"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
@@ -122,6 +126,7 @@
             card_view:cardCornerRadius="4dp">
 
             <LinearLayout
+                android:background="@drawable/colored_border"
                 android:id="@+id/LLselect"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

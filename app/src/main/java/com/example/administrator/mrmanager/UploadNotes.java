@@ -87,7 +87,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-        if(view == btn_Select)
+        if(view == LLselect)
         {
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("file/*");
