@@ -4,6 +4,7 @@ package com.example.administrator.mrmanager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -11,11 +12,12 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class UploadNotes extends MainActivity implements View.OnClickListener {
     LinearLayout LLselect;
-    Button btn_Upload,btn_Reset,btn_Select;
+    Button btn_Upload,btn_Reset;
     TextView text_fileName;
     String selected_class;
     int FILE_SELECT_CODE=1;
@@ -106,11 +108,15 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.e("request code",requestCode+"");
         if(requestCode==FILE_SELECT_CODE)
         {
-            Uri selectedFileUri=data.getData();
-            text_fileName.setText(selectedFileUri.toString().trim());
-
+            try {
+                Uri selectedFileUri = data.getData();
+                text_fileName.setText(selectedFileUri.toString().trim());
+            }catch (Exception e){
+                Toast.makeText(getApplicationContext(),"No File Selected",Toast.LENGTH_SHORT);
+            }
         }
     }
 
