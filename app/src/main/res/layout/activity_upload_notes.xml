@@ -110,6 +110,7 @@
                     android:text="Topic" />
 
                 <EditText
+                    android:id="@+id/txt_topic"
                     android:hint="Enter topic"
                     android:background="@drawable/round_corners"
                     android:layout_width="wrap_content"
