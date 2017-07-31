@@ -3,6 +3,7 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="Add">https://datahub.000webhostapp.com/add.php?</string>
 
     <string-array name="Class_string">
         <item>8th</item>

@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -26,20 +28,28 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
 
 
 public class UploadNotes extends MainActivity implements View.OnClickListener {
-    LinearLayout LLselect;
+    LinearLayout LLselect, LLQuestionType;
     Button btn_Upload,btn_Reset;
     TextView text_fileName;
     String selected_class;
-    String topic;
+    String HitUrl, Response;
     int FILE_SELECT_CODE=1;
     private StorageReference mStorageRef;
     Spinner spinner_class,spinner_subject;
     Uri selectedFileUri;
-    Uri downloadUrl1;
+    CheckBox check_notes, check_ques, check_solved, check_unsolved;
     EditText txt_topic;
 
     @Override
@@ -47,7 +57,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_notes);
 
-        mStorageRef = FirebaseStorage.getInstance().getReference().child("Notes");
+        mStorageRef = FirebaseStorage.getInstance().getReference();
 
         // Change the corresponding icon and text color on nav button click.
 
@@ -58,7 +68,24 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         btn_Reset = (Button) findViewById(R.id.Button_Reset);
         btn_Reset.setOnClickListener(this);
         txt_topic = (EditText) findViewById(R.id.txt_topic);
+
         text_fileName = (TextView) findViewById(R.id.Text_FileName);
+
+        LLQuestionType = (LinearLayout) findViewById(R.id.LLQuestionType);
+        check_notes = (CheckBox) findViewById(R.id.check_notes);
+        check_ques = (CheckBox) findViewById(R.id.check_question);
+        check_ques.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (compoundButton.isChecked()) {
+                    LLQuestionType.setVisibility(View.VISIBLE);
+                } else {
+                    LLQuestionType.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
+        check_solved = (CheckBox) findViewById(R.id.check_solved);
+        check_unsolved = (CheckBox) findViewById(R.id.check_unsolved);
 
         spinner_class = (Spinner) findViewById(R.id.Spinner_Class);
         spinner_subject = (Spinner) findViewById(R.id.Spinner_Subject);
@@ -118,14 +145,30 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         }
         else if(view == btn_Upload)
         {
-            topic = txt_topic.getText().toString().trim();
-           new HitUpload().execute();
+            if (!txt_topic.getText().equals(null)) {
+                if (selectedFileUri != null) {
+                    createHitUrl();
+                    new HitUpload().execute();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please Select a file to Upload !", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getApplicationContext(), "Please Enter Topic !", Toast.LENGTH_SHORT).show();
+            }
         }
         else if(view == btn_Reset)
         {
 
         }
     }
+
+    public void createHitUrl() {
+        HitUrl = "https://datahub.000webhostapp.com/add.php?";
+        HitUrl += "&class=" + spinner_class.getSelectedItem().toString().trim();
+        HitUrl += "&subject=" + spinner_subject.getSelectedItem().toString().trim();
+        HitUrl += "&topic=" + txt_topic.getText().toString().trim();
+    }
+
 
     class HitUpload extends AsyncTask<Void, Void, Void>
     {
@@ -157,7 +200,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             // Get a URL to the uploaded content
                             @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                            downloadUrl1=downloadUrl;
+                            HitUrl += "&link=" + downloadUrl.toString().trim();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -172,9 +215,101 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            new HitApi().execute();
+
         }
     }
 
+    private static URL createUrl(String stringUrl) {
+        URL url = null;
+        try {
+            url = new URL(stringUrl);
+        } catch (MalformedURLException e) {
+            Log.e("", "Problem building the URL ", e);
+        }
+        return url;
+    }
+
+    private static String readFromStream(InputStream inputStream) throws IOException {
+        StringBuilder output = new StringBuilder();
+        if (inputStream != null) {
+            InputStreamReader inputStreamReader = new InputStreamReader(inputStream, Charset.forName("UTF-8"));
+            BufferedReader reader = new BufferedReader(inputStreamReader);
+            String line = reader.readLine();
+            while (line != null) {
+                output.append(line);
+                line = reader.readLine();
+            }
+            output.toString();
+        }
+        return output.toString();
+    }
+
+    class HitApi extends AsyncTask<Void, Void, Void> {
+
+        ProgressDialog progressDialog = new ProgressDialog(UploadNotes.this);
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog.show();
+            progressDialog.setMessage("Completing..");
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            URL url = createUrl(HitUrl);
+
+            // If the URL is null, then return early.
+
+            HttpURLConnection urlConnection = null;
+            InputStream inputStream = null;
+            try {
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setReadTimeout(10000 /* milliseconds */);
+                urlConnection.setConnectTimeout(15000 /* milliseconds */);
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                // If the request was successful (response code 200),
+                // then read the input stream and parse the response.
+                if (urlConnection.getResponseCode() == 200) {
+                    inputStream = urlConnection.getInputStream();
+                    Response = readFromStream(inputStream);
+                    Log.e("", "response code: " + Response);
+                } else {
+                    Log.e("", "Error response code: " + urlConnection.getResponseCode());
+                }
+            } catch (IOException e) {
+                Log.e("", "Problem retrieving the earthquake JSON results.", e);
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+                if (inputStream != null) {
+                    // Closing the input stream could throw an IOException, which is why
+                    // the makeHttpRequest(URL url) method signature specifies than an IOException
+                    // could be thrown.
+                    Log.e("", "inputstreamNull");
+                }
+            }
+
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            if (progressDialog.isShowing())
+                progressDialog.dismiss();
+
+            // iv_Banner.startAutoScroll();
+
+        }
+
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -184,8 +319,9 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
             try {
                 Uri selectedFileUri1 = data.getData();
                 selectedFileUri = Uri.fromFile(new File(selectedFileUri1.toString().trim()));
-                text_fileName.setText(selectedFileUri.toString().trim());
+                text_fileName.setText(selectedFileUri.getLastPathSegment().toString().trim());
             }catch (Exception e){
+                selectedFileUri = null;
                 Toast.makeText(getApplicationContext(),"No File Selected",Toast.LENGTH_SHORT);
             }
         }

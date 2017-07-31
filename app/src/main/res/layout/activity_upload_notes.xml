@@ -17,9 +17,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:textColor="#000000"
             android:padding="16dp"
             android:text="Upload"
+            android:textColor="#000000"
             android:textSize="25dp"
             android:textStyle="bold" />
 
@@ -30,9 +30,9 @@
             card_view:cardCornerRadius="4dp">
 
             <LinearLayout
-                android:background="@drawable/colored_border"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/colored_border"
                 android:orientation="horizontal">
 
                 <TextView
@@ -62,9 +62,9 @@
             card_view:cardCornerRadius="4dp">
 
             <LinearLayout
-                android:background="@drawable/colored_border"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/colored_border"
                 android:orientation="horizontal">
 
                 <TextView
@@ -95,9 +95,9 @@
             card_view:cardCornerRadius="4dp">
 
             <LinearLayout
-                android:background="@drawable/colored_border"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/colored_border"
                 android:orientation="horizontal">
 
                 <TextView
@@ -111,12 +111,12 @@
 
                 <EditText
                     android:id="@+id/txt_topic"
-                    android:hint="Enter topic"
-                    android:background="@drawable/round_corners"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_margin="8dp"
-                    android:layout_weight="8" />
+                    android:layout_weight="8"
+                    android:background="@drawable/round_corners"
+                    android:hint="Enter topic" />
 
             </LinearLayout>
         </android.support.v7.widget.CardView>
@@ -128,32 +128,35 @@
             card_view:cardCornerRadius="4dp">
 
             <LinearLayout
-                android:background="@drawable/colored_border"
                 android:id="@+id/LLselect"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@drawable/colored_border"
                 android:orientation="vertical">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
-                <TextView
-                    android:background="@color/colorPrimaryDark"
-                    android:layout_weight="8"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:padding="16dp"
-                    android:text="Select file"
-                    android:textColor="#ffffff" />
-                    <ImageView
-                        android:background="@color/colorPrimaryDark"
-                        android:src="@drawable/go"
+                    <TextView
                         android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="8"
+                        android:background="@color/colorPrimaryDark"
+                        android:padding="16dp"
+                        android:text="Select file"
+                        android:textColor="#ffffff" />
+
+                    <ImageView
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:padding="10dp"/>
+                        android:layout_weight="1"
+                        android:background="@color/colorPrimaryDark"
+                        android:padding="10dp"
+                        android:src="@drawable/go" />
 
                 </LinearLayout>
+
                 <TextView
                     android:id="@+id/Text_FileName"
                     android:layout_width="match_parent"
@@ -165,6 +168,58 @@
                     android:textStyle="italic" />
             </LinearLayout>
         </android.support.v7.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RadioGroup
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <CheckBox
+                    android:id="@+id/check_notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:checked="true"
+                    android:text="Notes" />
+
+                <CheckBox
+                    android:id="@+id/check_question"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Question papers" />
+            </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/LLQuestionType"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <RadioGroup
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <CheckBox
+                        android:id="@+id/check_solved"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Solved" />
+
+                    <CheckBox
+                        android:id="@+id/check_unsolved"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="Unsolved" />
+                </RadioGroup>
+            </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
