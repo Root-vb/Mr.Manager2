@@ -121,7 +121,8 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        <android.support.v7.widget.CardView
+            xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="5dp"
@@ -169,63 +170,6 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <RadioGroup
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <CheckBox
-                    android:id="@+id/check_notes"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="Notes" />
-
-                <CheckBox
-                    android:id="@+id/check_question"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Question papers" />
-            </RadioGroup>
-
-            <LinearLayout
-                android:id="@+id/LLQuestionType"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <RadioGroup
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-
-                    <CheckBox
-                        android:id="@+id/check_solved"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Solved" />
-
-                    <CheckBox
-                        android:id="@+id/check_unsolved"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="Unsolved" />
-                </RadioGroup>
-            </LinearLayout>
-        </LinearLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0">
 
         <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
             android:layout_width="match_parent"
@@ -235,32 +179,92 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:background="@drawable/colored_border"
+                android:layout_height="wrap_content">
 
-                <Button
-                    android:id="@+id/Button_Upload"
+                <RadioGroup
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@null"
-                    android:text="upload" />
+                    android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="3dp"
-                    android:layout_height="25dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@color/colorPrimaryDark" />
+                    <RadioButton
+                        android:id="@+id/check_notes"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="Notes" />
 
-                <Button
-                    android:id="@+id/Button_Reset"
+                    <RadioButton
+                        android:id="@+id/check_question"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Question papers" />
+                </RadioGroup>
+
+                <RadioGroup
+                    android:id="@+id/RGQuestionType"
+                    android:visibility="gone"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:background="@null"
-                    android:text="Reset"
-                    android:textColor="#ef2e07" />
+                    android:orientation="vertical">
+
+                    <RadioButton
+                        android:id="@+id/check_solved"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Solved" />
+
+                    <RadioButton
+                        android:id="@+id/check_unsolved"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="Unsolved" />
+                </RadioGroup>
             </LinearLayout>
         </android.support.v7.widget.CardView>
     </LinearLayout>
-</LinearLayout>
+
+<LinearLayout
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_weight="0">
+
+<android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    card_view:cardCornerRadius="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/Button_Upload"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="upload" />
+
+        <TextView
+            android:layout_width="3dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center_vertical"
+            android:background="@color/colorPrimaryDark" />
+
+        <Button
+            android:id="@+id/Button_Reset"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:text="Reset"
+            android:textColor="#ef2e07" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>
+</LinearLayout></LinearLayout>

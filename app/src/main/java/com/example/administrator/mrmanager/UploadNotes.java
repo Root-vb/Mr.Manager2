@@ -3,20 +3,23 @@ package com.example.administrator.mrmanager;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,7 +43,7 @@ import java.nio.charset.Charset;
 
 
 public class UploadNotes extends MainActivity implements View.OnClickListener {
-    LinearLayout LLselect, LLQuestionType;
+    LinearLayout LLselect;
     Button btn_Upload,btn_Reset;
     TextView text_fileName;
     String selected_class;
@@ -49,7 +52,8 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
     private StorageReference mStorageRef;
     Spinner spinner_class,spinner_subject;
     Uri selectedFileUri;
-    CheckBox check_notes, check_ques, check_solved, check_unsolved;
+    RadioGroup  RGQuestionType;
+    RadioButton check_notes, check_ques, check_solved, check_unsolved;
     EditText txt_topic;
 
     @Override
@@ -58,8 +62,6 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         setContentView(R.layout.activity_upload_notes);
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
-
-        // Change the corresponding icon and text color on nav button click.
 
         LLselect = (LinearLayout) findViewById(R.id.LLselect);
         LLselect.setOnClickListener(this);
@@ -71,35 +73,28 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
 
         text_fileName = (TextView) findViewById(R.id.Text_FileName);
 
-        LLQuestionType = (LinearLayout) findViewById(R.id.LLQuestionType);
-        check_notes = (CheckBox) findViewById(R.id.check_notes);
-        check_ques = (CheckBox) findViewById(R.id.check_question);
+        RGQuestionType = (RadioGroup) findViewById(R.id.RGQuestionType);
+        check_notes = (RadioButton) findViewById(R.id.check_notes);
+        check_ques = (RadioButton) findViewById(R.id.check_question);
         check_ques.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (compoundButton.isChecked()) {
-                    LLQuestionType.setVisibility(View.VISIBLE);
+                    RGQuestionType.setVisibility(View.VISIBLE);
                 } else {
-                    LLQuestionType.setVisibility(View.INVISIBLE);
+                    RGQuestionType.setVisibility(View.INVISIBLE);
                 }
             }
         });
-        check_solved = (CheckBox) findViewById(R.id.check_solved);
-        check_unsolved = (CheckBox) findViewById(R.id.check_unsolved);
+        check_solved = (RadioButton) findViewById(R.id.check_solved);
+        check_unsolved = (RadioButton) findViewById(R.id.check_unsolved);
 
         spinner_class = (Spinner) findViewById(R.id.Spinner_Class);
         spinner_subject = (Spinner) findViewById(R.id.Spinner_Subject);
 
-
         ArrayAdapter<CharSequence> adapter1 = ArrayAdapter.createFromResource(this, R.array.Class_string, android.R.layout.simple_spinner_item);
-        //ArrayAdapter<CharSequence> adapter2 = ArrayAdapter.createFromResource(this, R.array.Error_Subject_string, android.R.layout.simple_spinner_item);
-
         adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
         spinner_class.setAdapter(adapter1);
-        //spinner_subject.setAdapter(adapter2);
-
         spinner_class.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
         {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id)
@@ -113,6 +108,9 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
             // to close the onItemSelected
         });
     }
+
+
+
     public void select() {
             selected_class = ((Spinner) findViewById(R.id.Spinner_Class)).getSelectedItem().toString();
             if(selected_class.equals("11th")||selected_class.equals("12th"))
