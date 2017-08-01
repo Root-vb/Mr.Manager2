@@ -26,6 +26,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
@@ -147,6 +149,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
                 if (selectedFileUri != null) {
                     createHitUrl();
                     new HitUpload().execute();
+                    //new HitApi().execute();
                 } else {
                     Toast.makeText(getApplicationContext(), "Please Select a file to Upload !", Toast.LENGTH_SHORT).show();
                 }
@@ -167,9 +170,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         HitUrl += "&topic=" + txt_topic.getText().toString().trim();
     }
 
-
-    class HitUpload extends AsyncTask<Void, Void, Void>
-    {
+    class HitUpload extends AsyncTask<Void, Void, Void> {
         ProgressDialog progressDialog = new ProgressDialog(UploadNotes.this);
         @Override
         protected void onPreExecute() {
@@ -199,6 +200,8 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
                             // Get a URL to the uploaded content
                             @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
                             HitUrl += "&link=" + downloadUrl.toString().trim();
+                            Log.e("", HitUrl);
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -213,7 +216,6 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-            new HitApi().execute();
 
         }
     }
@@ -308,6 +310,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         }
 
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -315,21 +318,15 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         if(requestCode==FILE_SELECT_CODE)
         {
             try {
-                Uri selectedFileUri1 = data.getData();
-                selectedFileUri = Uri.fromFile(new File(selectedFileUri1.toString().trim()));
+                selectedFileUri = data.getData();
                 text_fileName.setText(selectedFileUri.getLastPathSegment().toString().trim());
             }catch (Exception e){
                 selectedFileUri = null;
-                Toast.makeText(getApplicationContext(),"No File Selected",Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), "No File Selected", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
 }
 
 
