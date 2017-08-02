@@ -10,15 +10,18 @@ import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
-    LinearLayout LLUploadFiles,LLdashboard,LLstudent,LLattendance;
+    LinearLayout LLUploadFiles, LLdashboard, LLstudent, LLattendance, LLSignOut;
+    private FirebaseAuth mAuth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         isStoragePermissionGranted();
-
+        mAuth = FirebaseAuth.getInstance();
         LLUploadFiles = (LinearLayout) findViewById(R.id.LLuploadFiles);
         LLUploadFiles.setOnClickListener(this);
 
@@ -30,6 +33,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         LLattendance = (LinearLayout) findViewById(R.id.LLattendance);
         LLattendance.setOnClickListener(this);
+
+        LLSignOut = (LinearLayout) findViewById(R.id.LLsignOut);
+        LLSignOut.setOnClickListener(this);
     }
     public  boolean isStoragePermissionGranted() {
         if (Build.VERSION.SDK_INT >= 23) {
@@ -67,6 +73,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         else if(view == LLattendance)
         {
             startActivity(new Intent(this,Attendance.class));
+        } else if (view == LLSignOut) {
+            mAuth.signOut();
+            startActivity(new Intent(this, Login.class));
+            finish();
+
         }
     }
 }

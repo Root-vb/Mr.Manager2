@@ -1,5 +1,7 @@
 package com.example.administrator.mrmanager;
 
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +9,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -23,13 +26,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     EditText email_id, password;
     Button login;
     TextView Invalid;
+    ProgressDialog progressDialog;
     private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        progressDialog = new ProgressDialog(Login.this);
         email_id = (EditText) findViewById(R.id.input_email);
         password = (EditText) findViewById(R.id.input_password);
         login = (Button) findViewById(R.id.btn_login);
@@ -45,6 +49,17 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUI(currentUser);
+    }
+
+    public void showProgressDialog() {
+        progressDialog.show();
+        progressDialog.setMessage("Authenticating..");
+    }
+
+    public void hideProgressDialog() {
+        if (progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
     }
 
     private boolean validateForm() {
@@ -70,6 +85,9 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void signIn(String email, String password) {
+
+        showProgressDialog();
+
         Log.d("", "signIn:" + email);
         if (!validateForm()) {
             return;
@@ -95,13 +113,14 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
                     }
                 });
+        hideProgressDialog();
         // [END sign_in_with_email]
     }
 
     private void updateUI(FirebaseUser user) {
-        //hideProgressDialog();
         if (user != null) {
             startActivity(new Intent(this, MainActivity.class));
+            finish();
         } else {
             email_id.setText(null);
             password.setText(null);
@@ -116,6 +135,10 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
         } else*/
         if (v == login) {
+
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            Invalid.setVisibility(View.INVISIBLE);
             signIn(email_id.getText().toString(), password.getText().toString());
         }
         /* else if (i == R.id.sign_out_button) {

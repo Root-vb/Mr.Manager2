@@ -49,6 +49,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
     Button btn_Upload,btn_Reset;
     TextView text_fileName;
     String selected_class;
+    //ProgressDialog progressDialog;
     String HitUrl, Response;
     int FILE_SELECT_CODE=1;
     private StorageReference mStorageRef;
@@ -72,7 +73,6 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         btn_Reset = (Button) findViewById(R.id.Button_Reset);
         btn_Reset.setOnClickListener(this);
         txt_topic = (EditText) findViewById(R.id.txt_topic);
-
         text_fileName = (TextView) findViewById(R.id.Text_FileName);
 
         RGQuestionType = (RadioGroup) findViewById(R.id.RGQuestionType);
@@ -148,8 +148,9 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
             if (!txt_topic.getText().equals(null)) {
                 if (selectedFileUri != null) {
                     createHitUrl();
+
                     new HitUpload().execute();
-                    //new HitApi().execute();
+
                 } else {
                     Toast.makeText(getApplicationContext(), "Please Select a file to Upload !", Toast.LENGTH_SHORT).show();
                 }
@@ -171,7 +172,11 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
     }
 
     class HitUpload extends AsyncTask<Void, Void, Void> {
+
         ProgressDialog progressDialog = new ProgressDialog(UploadNotes.this);
+
+        int currentprogress;
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -182,16 +187,15 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         @Override
         protected Void doInBackground(Void... voids) {
 
-            StorageReference pdfRef = mStorageRef.child(selectedFileUri.getLastPathSegment());
 
-            final String path = pdfRef.getPath();
+            StorageReference pdfRef = mStorageRef.child(selectedFileUri.getLastPathSegment());
 
             pdfRef.putFile(selectedFileUri).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     @SuppressWarnings("VisibleForTests")  double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                    int currentprogress = (int) progress;
-                    progressDialog.setMessage("Uploading.. "+currentprogress);
+                    currentprogress = (int) progress;
+                    //progressDialog.setMessage("Uploading.. "+currentprogress);
 
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -216,6 +220,13 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+            if (currentprogress == 100) {
+                new HitApi().execute();
+            }
+
 
         }
     }
