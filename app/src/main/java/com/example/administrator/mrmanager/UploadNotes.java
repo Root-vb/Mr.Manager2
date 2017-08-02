@@ -148,7 +148,6 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
             if (!txt_topic.getText().equals(null)) {
                 if (selectedFileUri != null) {
                     createHitUrl();
-
                     new HitUpload().execute();
 
                 } else {
@@ -173,13 +172,13 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
 
     class HitUpload extends AsyncTask<Void, Void, Void> {
 
+        boolean flag;
         ProgressDialog progressDialog = new ProgressDialog(UploadNotes.this);
-
-        int currentprogress;
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            flag = false;
             progressDialog.show();
             progressDialog.setMessage("Uploading..");
         }
@@ -194,8 +193,11 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     @SuppressWarnings("VisibleForTests")  double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                    currentprogress = (int) progress;
-                    //progressDialog.setMessage("Uploading.. "+currentprogress);
+                    int currentprogress = (int) progress;
+                    if (currentprogress > 99) {
+                        flag = true;
+                    }
+//                    progressDialog.setMessage("Uploading.. "+currentprogress);
 
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -220,10 +222,11 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+
+            if (flag == true) {
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
             }
-            if (currentprogress == 100) {
                 new HitApi().execute();
             }
 
@@ -339,26 +342,3 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
     }
 
 }
-
-
-    /*private void Upload(Uri SFU,String topic)
-    {
-
-        StorageReference pdfRef = mStorageRef.child("notes/"+topic);
-
-        pdfRef.putFile(SFU)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        // Get a URL to the uploaded content
-                        @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                        downloadUrl1=downloadUrl;
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Toast.makeText(getApplicationContext(),"Some Error Occured",Toast.LENGTH_LONG);
-                    }
-                });
-    }*/
