@@ -163,6 +163,16 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         }
     }
 
+    public void checkResponse() {
+        if (Response.equals("true")) {
+            Toast.makeText(getApplicationContext(), "Data Uploaded Successfully", Toast.LENGTH_SHORT).show();
+            //call reset funcction
+        } else {
+            Toast.makeText(getApplicationContext(), "Data Upload failed", Toast.LENGTH_SHORT).show();
+            //call reset function
+        }
+    }
+
     public void createHitUrl() {
         HitUrl = "https://datahub.000webhostapp.com/add.php?";
         HitUrl += "&class=" + spinner_class.getSelectedItem().toString().trim();
@@ -173,6 +183,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
     class HitUpload extends AsyncTask<Void, Void, Void> {
 
         boolean flag;
+        int currentprogress;
         ProgressDialog progressDialog = new ProgressDialog(UploadNotes.this);
 
         @Override
@@ -181,11 +192,12 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
             flag = false;
             progressDialog.show();
             progressDialog.setMessage("Uploading..");
+            progressDialog.setCanceledOnTouchOutside(false);
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-
+            progressDialog.setMessage("Uploading.. " + currentprogress);
 
             StorageReference pdfRef = mStorageRef.child(selectedFileUri.getLastPathSegment());
 
@@ -193,11 +205,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
                 @Override
                 public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
                     @SuppressWarnings("VisibleForTests")  double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                    int currentprogress = (int) progress;
-                    if (currentprogress > 99) {
-                        flag = true;
-                    }
-//                    progressDialog.setMessage("Uploading.. "+currentprogress);
+                    currentprogress = (int) progress;
 
                 }
             }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -206,7 +214,8 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
                             // Get a URL to the uploaded content
                             @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
                             HitUrl += "&link=" + downloadUrl.toString().trim();
-                            Log.e("", HitUrl);
+                            Log.e("E", HitUrl);
+                            flag = true;
 
                         }
                     })
@@ -268,6 +277,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
             super.onPreExecute();
             progressDialog.show();
             progressDialog.setMessage("Completing..");
+            progressDialog.setCanceledOnTouchOutside(false);
         }
 
         @Override
@@ -291,12 +301,12 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
                 if (urlConnection.getResponseCode() == 200) {
                     inputStream = urlConnection.getInputStream();
                     Response = readFromStream(inputStream);
-                    Log.e("", "response code: " + Response);
+                    Log.e("E", "response code: " + Response);
                 } else {
-                    Log.e("", "Error response code: " + urlConnection.getResponseCode());
+                    Log.e("E", "Error response code: " + urlConnection.getResponseCode());
                 }
             } catch (IOException e) {
-                Log.e("", "Problem retrieving the earthquake JSON results.", e);
+                Log.e("E", "Problem retrieving the earthquake JSON results.", e);
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
@@ -305,7 +315,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
                     // Closing the input stream could throw an IOException, which is why
                     // the makeHttpRequest(URL url) method signature specifies than an IOException
                     // could be thrown.
-                    Log.e("", "inputstreamNull");
+                    Log.e("E", "inputstreamNull");
                 }
             }
 

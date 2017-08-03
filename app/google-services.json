@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "564994852357",
+    "firebase_url": "https://mrmanager-73024.firebaseio.com",
+    "project_id": "mrmanager-73024",
+    "storage_bucket": "mrmanager-73024.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564994852357:android:bde4b4263ac4dc05",
+        "android_client_info": {
+          "package_name": "com.example.administrator.mrmanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "564994852357-t908ajn098qi8nshtsgi6h725cvu7lup.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.administrator.mrmanager",
+            "certificate_hash": "8862fb6630ec8a8f7a7ea2839fc4deb1f4451907"
+          }
+        },
+        {
+          "client_id": "564994852357-nr839f0flbj9kp03q04ivfjrk42ufjvm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.administrator.mrmanager",
+            "certificate_hash": "4ca88f56f68b8575b960d9ff2c2d5a049ffb2dce"
+          }
+        },
+        {
+          "client_id": "564994852357-tlvg5nbgc3v9i506kf7e6q6k1jf66qv8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA9mdkVFZEdEbCh1Z221hJVlyWuNbEYvzk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "564994852357-tlvg5nbgc3v9i506kf7e6q6k1jf66qv8.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
