@@ -86,7 +86,6 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
     private void signIn(String email, String password) {
 
-        showProgressDialog();
 
         Log.d("", "signIn:" + email);
         if (!validateForm()) {
@@ -135,11 +134,12 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
             createAccount(mEmailField.getText().toString(), mPasswordField.getText().toString());
         } else*/
         if (v == login) {
-
+            showProgressDialog();
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             Invalid.setVisibility(View.INVISIBLE);
             signIn(email_id.getText().toString(), password.getText().toString());
+            hideProgressDialog();
         }
         /* else if (i == R.id.sign_out_button) {
             signOut();

@@ -2,6 +2,7 @@
 package com.example.administrator.mrmanager;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -12,12 +13,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -50,7 +53,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
     TextView text_fileName;
     String selected_class;
     //ProgressDialog progressDialog;
-    String HitUrl, Response;
+    String HitUrl, Response = "false";
     int FILE_SELECT_CODE=1;
     private StorageReference mStorageRef;
     Spinner spinner_class,spinner_subject;
@@ -58,6 +61,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
     RadioGroup  RGQuestionType;
     RadioButton check_notes, check_ques, check_solved, check_unsolved;
     EditText txt_topic;
+    boolean flag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +78,6 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         btn_Reset.setOnClickListener(this);
         txt_topic = (EditText) findViewById(R.id.txt_topic);
         text_fileName = (TextView) findViewById(R.id.Text_FileName);
-
         RGQuestionType = (RadioGroup) findViewById(R.id.RGQuestionType);
         check_notes = (RadioButton) findViewById(R.id.check_notes);
         check_ques = (RadioButton) findViewById(R.id.check_question);
@@ -139,6 +142,8 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
     public void onClick(View view) {
         if(view == LLselect)
         {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
             Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
             intent.setType("file/*");
             startActivityForResult(Intent.createChooser(intent, "Select a File to Upload"),FILE_SELECT_CODE);
@@ -148,29 +153,65 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
             if (!txt_topic.getText().equals(null)) {
                 if (selectedFileUri != null) {
                     createHitUrl();
-                    new HitUpload().execute();
+                    UploadToFirebase();
+                    //Reset();
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Please Select a file to Upload !", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UploadNotes.this, "Please Select a file to Upload !", Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(getApplicationContext(), "Please Enter Topic !", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UploadNotes.this, "Please Enter Topic !", Toast.LENGTH_SHORT).show();
             }
         }
         else if(view == btn_Reset)
         {
-
+            Reset();
         }
     }
 
-    public void checkResponse() {
-        if (Response.equals("true")) {
-            Toast.makeText(getApplicationContext(), "Data Uploaded Successfully", Toast.LENGTH_SHORT).show();
-            //call reset funcction
-        } else {
-            Toast.makeText(getApplicationContext(), "Data Upload failed", Toast.LENGTH_SHORT).show();
-            //call reset function
-        }
+
+    public void UploadToFirebase() {
+        final ProgressDialog progressDialog = new ProgressDialog(UploadNotes.this);
+        progressDialog.setIndeterminate(false);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setMessage("Uploading..");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
+        StorageReference pdfRef = mStorageRef.child(selectedFileUri.getLastPathSegment());
+
+        pdfRef.putFile(selectedFileUri).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                @SuppressWarnings("VisibleForTests") double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                int currentprogress = (int) progress;
+                progressDialog.setProgress(currentprogress);
+
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // Get a URL to the uploaded content
+                @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                HitUrl += "&link=" + downloadUrl.toString();
+                progressDialog.dismiss();
+                new HitApi().execute();
+
+            }
+        })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        progressDialog.dismiss();
+                        Toast.makeText(UploadNotes.this, "Some Error Occured", Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+
+    public void Reset() {
+        startActivity(new Intent(this, UploadNotes.class));
+        finish();
+
     }
 
     public void createHitUrl() {
@@ -178,69 +219,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         HitUrl += "&class=" + spinner_class.getSelectedItem().toString().trim();
         HitUrl += "&subject=" + spinner_subject.getSelectedItem().toString().trim();
         HitUrl += "&topic=" + txt_topic.getText().toString().trim();
-    }
-
-    class HitUpload extends AsyncTask<Void, Void, Void> {
-
-        boolean flag;
-        int currentprogress;
-        ProgressDialog progressDialog = new ProgressDialog(UploadNotes.this);
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            flag = false;
-            progressDialog.show();
-            progressDialog.setMessage("Uploading..");
-            progressDialog.setCanceledOnTouchOutside(false);
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            progressDialog.setMessage("Uploading.. " + currentprogress);
-
-            StorageReference pdfRef = mStorageRef.child(selectedFileUri.getLastPathSegment());
-
-            pdfRef.putFile(selectedFileUri).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    @SuppressWarnings("VisibleForTests")  double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
-                    currentprogress = (int) progress;
-
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            // Get a URL to the uploaded content
-                            @SuppressWarnings("VisibleForTests") Uri downloadUrl = taskSnapshot.getDownloadUrl();
-                            HitUrl += "&link=" + downloadUrl.toString().trim();
-                            Log.e("E", HitUrl);
-                            flag = true;
-
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception exception) {
-                            Toast.makeText(getApplicationContext(),"Some Error Occured",Toast.LENGTH_LONG).show();
-                        }
-                    });
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-
-            if (flag == true) {
-            if (progressDialog.isShowing()) {
-                progressDialog.dismiss();
-            }
-                new HitApi().execute();
-            }
-
-
-        }
+        HitUrl = HitUrl.replaceAll(" ", "%20");
     }
 
     private static URL createUrl(String stringUrl) {
@@ -270,7 +249,7 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
 
     class HitApi extends AsyncTask<Void, Void, Void> {
 
-        ProgressDialog progressDialog = new ProgressDialog(UploadNotes.this);
+        final ProgressDialog progressDialog = new ProgressDialog(UploadNotes.this);
 
         @Override
         protected void onPreExecute() {
@@ -282,8 +261,8 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
 
         @Override
         protected Void doInBackground(Void... params) {
-
             URL url = createUrl(HitUrl);
+            Log.e("E", HitUrl);
 
             // If the URL is null, then return early.
 
@@ -328,6 +307,13 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
             super.onPostExecute(aVoid);
             if (progressDialog.isShowing())
                 progressDialog.dismiss();
+            if (Response.equals("true")) {
+                Toast.makeText(UploadNotes.this, "Data Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                Reset();
+            } else {
+                Toast.makeText(UploadNotes.this, "Data Upload failed", Toast.LENGTH_SHORT).show();
+                Reset();
+            }
 
             // iv_Banner.startAutoScroll();
 
@@ -343,10 +329,11 @@ public class UploadNotes extends MainActivity implements View.OnClickListener {
         {
             try {
                 selectedFileUri = data.getData();
+                text_fileName.setVisibility(View.VISIBLE);
                 text_fileName.setText(selectedFileUri.getLastPathSegment().toString().trim());
             }catch (Exception e){
                 selectedFileUri = null;
-                Toast.makeText(getApplicationContext(), "No File Selected", Toast.LENGTH_SHORT).show();
+                Toast.makeText(UploadNotes.this, "No File Selected", Toast.LENGTH_SHORT).show();
             }
         }
     }
